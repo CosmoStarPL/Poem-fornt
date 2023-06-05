@@ -50,10 +50,11 @@ const Body = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 10px;
 `;
 
 const PoemBox = styled.div`
-  width: 300px;
+  width: 100%;
   height: fit-content;
   background: rgba(254, 254, 254, 0.7);
   border-radius: 20px;
@@ -79,12 +80,13 @@ PoemBox.Head.Time = styled.div`
 `;
 
 PoemBox.Main = styled.div`
-  margin: 0px 20px;
+  margin: 20px 20px;
   font-style: italic;
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
   color: #000000;
+  width: 300px;
 `;
 PoemBox.Footer = styled.div`
   margin: 0px 20px;

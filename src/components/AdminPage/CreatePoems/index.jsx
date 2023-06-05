@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import {
   Container,
   Form,
-  Box,
   Title,
   CreatePoem,
   SubTitle,
@@ -12,15 +11,11 @@ import {
 } from "./style";
 import { useNavigate } from "react-router-dom";
 
-const URL = "https://316d-213-230-92-87.ngrok-free.app/admin";
+const URL = "http://localhost:3001/admin";
 const HEADERS = {
   "Content-Type": "application/json",
   Accept: "application/json",
 };
-
-// Баг лист:
-//            Не реактивный
-//            Удоление и edit работает криво
 
 const CreatePoemPage = () => {
   const navigate = useNavigate();
@@ -28,8 +23,8 @@ const CreatePoemPage = () => {
   const poemRef = useRef("");
   const authorRef = useRef("");
 
-  const Create = async () => {
-    await fetch(URL, {
+  const Create = () => {
+      fetch(URL, {
       method: "POST",
       headers: HEADERS,
       body: JSON.stringify({
@@ -39,11 +34,24 @@ const CreatePoemPage = () => {
       }),
     });
   };
+  const cols = 35
+  function inputChangeHandler(event) {
+    const lines = event.target.value.split("\n");
+    const maxCharsPerLine = cols;  
+    const updatedLines = lines.map((line) => {
+      if (line.length > maxCharsPerLine) {
+        return line.slice(0, maxCharsPerLine);
+      }
+      return line;
+    });
+  
+    event.target.value = updatedLines.join("\n");
+  }
 
   return (
     <div>
       <Container>
-        <Form afteSubmit={() => navigate("/admin")}>
+        <Form afteSubmit={() => navigate("/")}>
           <CreatePoem
             style={{
               display: "flex",
@@ -59,10 +67,11 @@ const CreatePoemPage = () => {
               id="poem"
               ref={poemRef}
               rows="30"
-              cols="27"
+              cols={cols}
+              onChange={inputChangeHandler}
             ></Input.Textarea>
             <Select>
-              <option ref={authorRef}>Дарья Люсетт</option>
+              <option ref={authorRef}>admin</option>
             </Select>
             <SendButton onClick={Create}>Опубликовать</SendButton>
           </CreatePoem>

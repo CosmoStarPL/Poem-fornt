@@ -1,20 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Body, Container, Header, PoemBox } from "./style";
 
 const HEADERS = {
   "Content-Type": "application/json",
   Accept: "application/json",
-  "ngrok-skip-browser-warning": "34214",
 };
 
 const HomePage = () => {
   const [data, setData] = useState([]);
-  fetch("https://316d-213-230-92-87.ngrok-free.app/", {
-    method: "GET",
-    headers: HEADERS,
-  })
-    .then((res) => res.json())
-    .then((data) => setData(data.result));
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/", {
+          method: "GET",
+          headers: HEADERS,
+        });
+        const data = await response.json();
+        setData(data.result);
+      } catch (error) {
+        console.error("Ошибка при выполнении запроса:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getBrokenText = (text) => {
+    const replaced = text.replace(/\n/g, "<br>");
+    return replaced;
+  };
+
   return (
     <Container>
       <Header>
@@ -43,7 +58,7 @@ const HomePage = () => {
                   </PoemBox.Head.Title>
                   <PoemBox.Head.Time>{time || "22:22"}</PoemBox.Head.Time>
                 </PoemBox.Head>
-                <PoemBox.Main>{poem || "Стих..."}</PoemBox.Main>
+                <PoemBox.Main dangerouslySetInnerHTML={{__html: getBrokenText(poem) || "Стих..."}}></PoemBox.Main>
                 <PoemBox.Footer>
                   <PoemBox.Footer.Like>
                     {author || "Author"}
